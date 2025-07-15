@@ -25,7 +25,7 @@ exports.sendWelcomeEmail = async (userEmail, userName) => {
     await transporter.sendMail(mailOptions);
     console.log(`E-mail de boas-vindas enviado para ${userEmail}`);
   } catch (error) {
-    // Logamos o erro mas não impedimos o fluxo de registro por causa disso
+
     console.error(`Erro ao enviar e-mail de boas-vindas para ${userEmail}:`, error);
   }
 };
