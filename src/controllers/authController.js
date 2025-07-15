@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { sendWelcomeEmail } = require('../services/emailService');
 
 exports.register = async (req, res) => {
   try {
@@ -12,6 +13,9 @@ exports.register = async (req, res) => {
     }
 
     const user = await User.create({ username, email, password });
+
+    // Envia o e-mail de boas-vindas de forma assíncrona
+    sendWelcomeEmail(user.email, user.username);
 
     const payload = { user: { id: user.id } };
     jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
