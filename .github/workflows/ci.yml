@@ -1,0 +1,94 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  NODE_ENV: test
+  JWT_SECRET: test_secret_key_for_ci_only
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Check code formatting
+        run: npm run format:check
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+
+      - name: Security audit
+        run: npm audit --audit-level=moderate
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --only=production
+
+      - name: Build Docker image
+        run: docker build -t plataforma-cursos-backend:${{ github.sha }} .
+
+      - name: Test Docker image
+        run: |
+          docker run -d --name test-container -p 5000:5000 \
+            -e NODE_ENV=production \
+            -e JWT_SECRET=${{ secrets.JWT_SECRET || 'test_secret' }} \
+            plataforma-cursos-backend:${{ github.sha }}
+          sleep 10
+          curl -f http://localhost:5000/api/courses || exit 1
+          docker stop test-container
+          docker rm test-container
+
+      - name: Save Docker image as artifact
+        run: |
+          docker save plataforma-cursos-backend:${{ github.sha }} | gzip > plataforma-cursos-backend.tar.gz
+
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: plataforma-cursos-backend.tar.gz
+          retention-days: 7

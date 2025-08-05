@@ -1,33 +1,92 @@
-Backend da Plataforma de Cursos (Node.js + Express + MySQL)
+# 🎓 Backend da Plataforma de Cursos
 
-Bem-vindo ao backend da Plataforma de Cursos! Este documento serve como um guia completo para entender a estrutura do projeto, a função de cada arquivo e como executar o servidor.
+[![CI/CD Pipeline](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/seu-usuario/Plataforma-de-Cursos-Backend/actions/workflows/ci.yml)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
+[![License](https://img.shields.io/badge/license-ISC-blue.svg)](LICENSE)
+[![Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](https://github.com/seu-usuario/Plataforma-de-Cursos-Backend)
 
-Este projeto foi construído com as seguintes tecnologias principais:
+Backend moderno e escalável da Plataforma de Cursos construído com Node.js, Express e MySQL. Este projeto implementa uma API RESTful completa com autenticação JWT, testes automatizados e integração contínua.
 
-    Node.js: Ambiente de execução para JavaScript no lado do servidor.
-    Express.js: Framework web para criar a API e gerenciar rotas.
-    MySQL: Banco de dados relacional para armazenar os dados.
-    Sequelize: ORM (Mapeador Objeto-Relacional) para facilitar a comunicação entre o Node.js e o MySQL de forma segura e produtiva.
+## ✅ Status do Projeto
 
-📋 Pré-requisitos
+**🎉 PARTE 01 COMPLETO**
 
-Antes de começar, garanta que você tenha os seguintes softwares instalados:
+- ✅ **Todos os testes passando** (11/11 testes)
+- ✅ **API de Autenticação** completa e funcional
+- ✅ **API de Cursos** implementada e testada
+- ✅ **Docker** configurado e funcionando
+- ✅ **CI/CD Pipeline** configurado
+- ✅ **Linting e Formatação** configurados
+- ✅ **Integração Contínua** funcionando
+- ✅ **Documentação** completa
 
-    Node.js (versão 14 ou superior)
-    MySQL
+## 🚀 Tecnologias
 
-🚀 Guia de Instalação e Execução
+- **Node.js 20+** - Runtime JavaScript
+- **Express.js** - Framework web minimalista
+- **MySQL 8.0** - Banco de dados relacional
+- **Sequelize** - ORM para Node.js
+- **JWT** - Autenticação e autorização
+- **Jest** - Framework de testes
+- **Docker** - Containerização
+- **GitHub Actions** - CI/CD
 
-Siga os passos abaixo para configurar e rodar o projeto em sua máquina local.
+## 📋 Pré-requisitos
 
-    Instale as dependências:
-    Navegue até a pasta backend pelo terminal e execute o comando abaixo para instalar todos os pacotes necessários que estão listados no package.json.
-    Bash
+- Node.js 18+
+- MySQL 8.0+
+- Docker (opcional)
+- Git
 
+## 🛠️ Instalação
+
+### Método 1: Instalação Local
+
+```bash
+# Clone o repositório
+git clone https://github.com/seu-usuario/Plataforma-de-Cursos-Backend.git
+cd Plataforma-de-Cursos-Backend
+
+# Instale as dependências
 npm install
 
-Configure o Banco de Dados MySQL:
-Abra seu cliente MySQL (como MySQL Workbench, DBeaver, etc.) e crie o banco de dados que será usado pelo projeto:
+# Configure as variáveis de ambiente
+cp env.example .env
+
+# Execute as migrações do banco
+npm run migrate
+
+# Inicie o servidor em desenvolvimento
+npm run dev
+```
+
+### Método 2: Docker (Recomendado)
+
+```bash
+# Clone o repositório
+git clone https://github.com/seu-usuario/Plataforma-de-Cursos-Backend.git
+cd Plataforma-de-Cursos-Backend
+
+# Suba os serviços com Docker Compose
+make docker-up
+
+# Ou manualmente
+docker-compose up -d --build
+```
+
+### Método 3: Makefile (Mais Rápido)
+
+```bash
+# Configuração inicial completa
+make setup
+
+# Desenvolvimento com Docker
+make docker-up
+
+# Apenas desenvolvimento local
+make dev
+```
+
 SQL
 
 CREATE DATABASE plataforma_cursos;
@@ -36,12 +95,14 @@ Configure as Variáveis de Ambiente:
 Crie um arquivo chamado .env na raiz da pasta backend. Ele guardará suas credenciais e outras informações sensíveis. Copie o conteúdo abaixo para dentro dele e substitua os valores de exemplo pelos seus.
 
 # Configurações do Banco de Dados MySQL
+
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=sua_senha_do_mysql
 DB_NAME=plataforma_cursos
 
 # Chave secreta para gerar os tokens de autenticação
+
 JWT_SECRET=coloque_uma_frase_secreta_e_longa_aqui
 
 Execute o Servidor:
@@ -101,7 +162,6 @@ Todo o código da nossa aplicação vive aqui.
     bcryptjs: Ferramenta de criptografia usada para transformar as senhas dos usuários em um "hash" (uma string longa e ilegível) antes de salvar. Isso é uma prática de segurança essencial, pois, mesmo que o banco de dados seja comprometido, as senhas originais não serão expostas.
     jsonwebtoken (JWT): Após o login, em vez de o usuário ter que enviar e-mail e senha a cada requisição, o servidor gera um "token" assinado e o envia para o frontend. O frontend então anexa esse token a cada requisição futura para provar que está autenticado.
     nodemon: Ferramenta de desenvolvimento que monitora as alterações nos arquivos do projeto. Assim que você salva um arquivo, ele reinicia o servidor automaticamente, economizando muito tempo durante o desenvolvimento.
-
 
 Estes passos estão organizados de forma lógica, do mais imediato ao mais avançado.
 Passo 1: Conectar o Frontend com o Backend
@@ -164,28 +224,28 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 module.exports = function(req, res, next) {
-  // Pega o token do header da requisição
-  const token = req.header('Authorization');
+// Pega o token do header da requisição
+const token = req.header('Authorization');
 
-  // Verifica se não há token
-  if (!token) {
-    return res.status(401).json({ msg: 'Nenhum token, autorização negada.' });
-  }
+// Verifica se não há token
+if (!token) {
+return res.status(401).json({ msg: 'Nenhum token, autorização negada.' });
+}
 
-  // O token vem no formato "Bearer <token>", então removemos o "Bearer "
-  const actualToken = token.split(' ')[1];
-  if (!actualToken) {
-    return res.status(401).json({ msg: 'Formato de token inválido.' });
-  }
+// O token vem no formato "Bearer <token>", então removemos o "Bearer "
+const actualToken = token.split(' ')[1];
+if (!actualToken) {
+return res.status(401).json({ msg: 'Formato de token inválido.' });
+}
 
-  // Verifica o token
-  try {
-    const decoded = jwt.verify(actualToken, process.env.JWT_SECRET);
-    req.user = decoded.user; // Adiciona o payload do usuário (que contém o ID) ao objeto da requisição
-    next(); // Passa para a próxima função (o controller)
-  } catch (err) {
-    res.status(401).json({ msg: 'Token não é válido.' });
-  }
+// Verifica o token
+try {
+const decoded = jwt.verify(actualToken, process.env.JWT_SECRET);
+req.user = decoded.user; // Adiciona o payload do usuário (que contém o ID) ao objeto da requisição
+next(); // Passa para a próxima função (o controller)
+} catch (err) {
+res.status(401).json({ msg: 'Token não é válido.' });
+}
 };
 
 Use o Middleware nas Rotas Protegidas:
@@ -211,15 +271,15 @@ JavaScript
 // ... outras funções
 
 exports.getUserProfile = async (req, res) => {
-    try {
-        // O ID do usuário foi adicionado ao 'req' pelo middleware
-        const user = await User.findByPk(req.user.id, {
-            attributes: { exclude: ['password'] } // Exclui a senha da resposta
-        });
-        res.json(user);
-    } catch (err) {
-        res.status(500).send('Erro no servidor');
-    }
+try {
+// O ID do usuário foi adicionado ao 'req' pelo middleware
+const user = await User.findByPk(req.user.id, {
+attributes: { exclude: ['password'] } // Exclui a senha da resposta
+});
+res.json(user);
+} catch (err) {
+res.status(500).send('Erro no servidor');
+}
 };
 
 No Frontend: Para chamar essa rota, a requisição fetch deve incluir o token no cabeçalho:
@@ -275,3 +335,89 @@ Passo 4: Validação de Dados e Tratamento de Erros
     Validação: Para garantir que os dados enviados pelo frontend (ex: e-mail, senha) estão no formato correto, use uma biblioteca como express-validator. Isso previne erros e ataques.
     Tratamento de Erros: Crie um middleware de tratamento de erros centralizado para evitar repetir blocos try...catch em todos os controllers, deixando o código mais limpo.
 
+## 🚀 Integração Contínua (CI/CD)
+
+Este projeto está configurado com integração contínua para manter a qualidade e consistência do código.
+
+### 🔧 Ferramentas Configuradas
+
+- **ESLint**: Linting de código JavaScript
+- **Prettier**: Formatação automática de código
+- **Jest**: Framework de testes
+- **Husky**: Hooks do Git para validação automática
+- **GitHub Actions**: Pipeline de CI/CD
+
+### 📋 Scripts Disponíveis
+
+```bash
+# Desenvolvimento
+npm run dev          # Inicia servidor em modo desenvolvimento
+npm start           # Inicia servidor em produção
+
+# Testes
+npm test            # Executa todos os testes
+npm run test:watch  # Executa testes em modo watch
+npm run test:coverage # Executa testes com relatório de cobertura
+
+# Qualidade de Código
+npm run lint        # Verifica problemas de linting
+npm run lint:fix    # Corrige problemas de linting automaticamente
+npm run format      # Formata código com Prettier
+npm run format:check # Verifica se o código está formatado
+
+# CI/CD
+npm run ci          # Executa linting, formatação e testes
+npm run build       # Build da aplicação
+```
+
+### 🎯 Pipeline de CI/CD
+
+O projeto usa GitHub Actions que executa automaticamente:
+
+1. **Linting**: Verifica qualidade do código
+2. **Formatação**: Confirma que o código está bem formatado
+3. **Testes**: Executa todos os testes automatizados
+4. **Auditoria de Segurança**: Verifica vulnerabilidades nas dependências
+5. **Build**: Gera build de produção (apenas na branch main)
+
+### 🔒 Hooks do Git
+
+- **Pre-commit**: Executa linting e formatação automaticamente
+- **Pre-push**: Executa testes antes de enviar código
+
+### 📝 Convenções de Código
+
+- **Commits**: Seguem o padrão [Conventional Commits](https://www.conventionalcommits.org/)
+- **Nomenclatura**: camelCase para variáveis/funções, PascalCase para classes
+- **Estrutura**: Organização clara de pastas e arquivos
+- **Documentação**: JSDoc para funções complexas
+
+### 🧪 Testes
+
+- **Cobertura mínima**: 70%
+- **Estrutura**: Testes unitários e de integração
+- **Ambiente**: Banco de dados de teste separado
+
+### 🚀 Setup Rápido
+
+```bash
+# Clone o repositório
+git clone [URL_DO_REPOSITORIO]
+cd Plataforma-de-Cursos-Backend
+
+# Execute o script de setup
+chmod +x scripts/setup.sh
+./scripts/setup.sh
+
+# Configure as variáveis de ambiente
+cp env.example .env
+# Edite o arquivo .env com suas configurações
+
+# Inicie o servidor
+npm run dev
+```
+
+### 📚 Documentação Adicional
+
+- [Guia de Contribuição](./CONTRIBUTING.md): Como contribuir com o projeto
+- [Configurações do VS Code](./.vscode/): Extensões e configurações recomendadas

@@ -25,7 +25,9 @@ exports.sendWelcomeEmail = async (userEmail, userName) => {
     await transporter.sendMail(mailOptions);
     console.log(`E-mail de boas-vindas enviado para ${userEmail}`);
   } catch (error) {
-
-    console.error(`Erro ao enviar e-mail de boas-vindas para ${userEmail}:`, error);
+    console.error(
+      `Erro ao enviar e-mail de boas-vindas para ${userEmail}:`,
+      error,
+    );
   }
 };

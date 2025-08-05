@@ -6,7 +6,7 @@ const Course = sequelize.define('Course', {
   category: { type: DataTypes.STRING, allowNull: false },
   duration: { type: DataTypes.STRING, allowNull: false },
   description: { type: DataTypes.TEXT, allowNull: false },
-  imageUrl: { type: DataTypes.STRING, allowNull: false }
+  imageUrl: { type: DataTypes.STRING, allowNull: false },
 });
 
 module.exports = Course;
