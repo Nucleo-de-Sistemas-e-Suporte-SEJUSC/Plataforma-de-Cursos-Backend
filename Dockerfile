@@ -2,7 +2,7 @@
 FROM node:20-alpine AS base
 
 # Instalar dependências do sistema
-RUN apk add --no-cache dumb-init
+RUN apk add --no-cache dumb-init python3 make g++ sqlite-dev
 
 # Criar usuário não-root
 RUN addgroup -g 1001 -S nodejs
@@ -14,8 +14,8 @@ WORKDIR /app
 # Copiar arquivos de dependências
 COPY package*.json ./
 
-# Instalar dependências (sem dev dependencies e sem husky)
-RUN npm ci --omit=dev --ignore-scripts && npm cache clean --force
+# Instalar dependências (sem dev dependencies mas permitindo scripts para compilar sqlite3)
+RUN npm ci --omit=dev && npm cache clean --force
 
 # Copiar código da aplicação
 COPY --chown=nodeuser:nodejs . .
