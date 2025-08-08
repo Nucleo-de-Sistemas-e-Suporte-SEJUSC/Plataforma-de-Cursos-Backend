@@ -9,7 +9,7 @@ const courseRoutes = require('./routes/courses');
 
 // Inicializa o aplicativo Express
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 5000;
 
 // Middlewares
 app.use(cors());
@@ -80,11 +80,11 @@ const startServer = async () => {
 
     await sequelize.sync(); // Sincroniza os modelos. Use { force: true } para recriar as tabelas (cuidado, apaga dados!)
     if (process.env.NODE_ENV !== 'production') {
-      // Modelos sincronizados com o banco de dados//////
+      // Modelos sincronizados com o banco de dados
     }
 
     if (process.env.NODE_ENV !== 'test') {
-      app.listen(PORT, () => {
+      app.listen(PORT, '0.0.0.0', () => {
         if (process.env.NODE_ENV !== 'production') {
           // Servidor rodando na porta ${PORT}
         }
@@ -93,6 +93,10 @@ const startServer = async () => {
   } catch (error) {
     if (process.env.NODE_ENV !== 'production') {
       // Não foi possível conectar ao banco de dados
+    }
+    // Em produção, relança o erro para o Docker detectar
+    if (process.env.NODE_ENV === 'production') {
+      throw error;
     }
   }
 };

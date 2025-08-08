@@ -15,6 +15,17 @@ if (process.env.NODE_ENV === 'test') {
       underscored: true,
     },
   });
+} else if (process.env.NODE_ENV === 'production' && !process.env.DB_NAME) {
+  // Configuração para produção sem banco (para testes de container)
+  sequelize = new Sequelize({
+    dialect: 'sqlite',
+    storage: ':memory:',
+    logging: false,
+    define: {
+      timestamps: true,
+      underscored: true,
+    },
+  });
 } else {
   // Configuração para desenvolvimento e produção (MySQL)
   sequelize = new Sequelize(
