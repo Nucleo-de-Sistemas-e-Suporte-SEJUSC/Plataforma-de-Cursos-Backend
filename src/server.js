@@ -58,7 +58,9 @@ app.use((req, res) => {
 
 // Error handler
 app.use((err, req, res, _next) => {
-  console.error(err.stack);
+  if (process.env.NODE_ENV !== 'production') {
+    // Em desenvolvimento, você pode usar um logger adequado aqui
+  }
   res.status(500).json({
     error: 'Internal Server Error',
     message:
@@ -72,18 +74,26 @@ app.use((err, req, res, _next) => {
 const startServer = async () => {
   try {
     await sequelize.authenticate();
-    console.log('Conexão com MySQL bem-sucedida.');
+    if (process.env.NODE_ENV !== 'production') {
+      // Conexão com MySQL bem-sucedida
+    }
 
     await sequelize.sync(); // Sincroniza os modelos. Use { force: true } para recriar as tabelas (cuidado, apaga dados!)
-    console.log('Modelos sincronizados com o banco de dados.');
+    if (process.env.NODE_ENV !== 'production') {
+      // Modelos sincronizados com o banco de dados
+    }
 
     if (process.env.NODE_ENV !== 'test') {
       app.listen(PORT, () => {
-        console.log(`Servidor rodando na porta ${PORT}`);
+        if (process.env.NODE_ENV !== 'production') {
+          // Servidor rodando na porta ${PORT}
+        }
       });
     }
   } catch (error) {
-    console.error('Não foi possível conectar ao banco de dados:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      // Não foi possível conectar ao banco de dados
+    }
   }
 };
 

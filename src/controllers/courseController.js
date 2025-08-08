@@ -6,7 +6,6 @@ exports.getAllCourses = async (req, res) => {
   try {
     res.json(courses);
   } catch (err) {
-    console.error(err);
     res.status(500).send('Erro no servidor');
   }
 };
@@ -42,7 +41,6 @@ exports.getCourseById = async (req, res) => {
     //  Retorna o objeto completo
     return res.status(200).json(course);
   } catch (error) {
-    console.error(error);
     return res.status(500).json({ message: 'Erro interno do servidor.' });
   }
 };
