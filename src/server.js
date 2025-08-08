@@ -80,7 +80,7 @@ const startServer = async () => {
 
     await sequelize.sync(); // Sincroniza os modelos. Use { force: true } para recriar as tabelas (cuidado, apaga dados!)
     if (process.env.NODE_ENV !== 'production') {
-      // Modelos sincronizados com o banco de dados
+      // Modelos sincronizados com o banco de dados//////
     }
 
     if (process.env.NODE_ENV !== 'test') {
