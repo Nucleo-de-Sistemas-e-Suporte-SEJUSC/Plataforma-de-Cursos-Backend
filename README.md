@@ -416,6 +416,18 @@ cp env.example .env
 # Inicie o servidor
 npm run dev
 ```
+## 📄 Licença e Uso
+
+### Licença
+
+Este projeto é de **uso interno** do órgão público e contém informações sensíveis. 
+
+**Restrições**:
+- ❌ Não pode ser usado comercialmente
+- ❌ Não pode ser redistribuído publicamente  
+- ❌ Código-fonte não pode ser compartilhado externamente
+- ✅ Pode ser adaptado para uso interno do órgão
+- ✅ Pode ser usado para fins de desenvolvimento e teste
 
 ### 📚 Documentação Adicional
 
